@@ -1,6 +1,5 @@
 package com.example.timetable;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,39 +24,38 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity3 extends AppCompatActivity implements SelectListener {
+public class MainActivity6 extends AppCompatActivity implements SelectListener {
 
     RecyclerView recyclerView;
-    ArrayList<Specialty> specialtyArrayList;
+    ArrayList<Group> groupArrayList;
+    GroupAdapter groupAdapter;
 
-    SpecialtyAdapter specialtyAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main3);
+        setContentView(R.layout.activity_main6);
+
         Intent intent = getIntent();
 
-        int id_dep = 0;
-        id_dep = intent.getIntExtra("id",id_dep);
+        int section_id = 0;
+        section_id = intent.getIntExtra("section_id",section_id);
 
-        recyclerView = findViewById(R.id.recyclerView2);
+        recyclerView = findViewById(R.id.recyclerView5);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
-        specialtyArrayList = new ArrayList<>();
 
-        specialtyAdapter= new SpecialtyAdapter(MainActivity3.this,specialtyArrayList, this);
-        recyclerView.setAdapter(specialtyAdapter);
+        groupArrayList = new ArrayList<>();
 
-        getSpecialties(id_dep);
-        
+        groupAdapter= new GroupAdapter(MainActivity6.this,groupArrayList,this);
+        recyclerView.setAdapter(groupAdapter);
+        getGroup(section_id);
+
     }
-    public void getSpecialties(int id_dep)
-    {
+    private void getGroup(int section_id){
         // Define the API endpoint URL
-        String url = "http://num.univ-biskra.dz/psp/pspapi/specialty?department="+id_dep+"&semester=2&key=appmob";
+        String url = "http://num.univ-biskra.dz/psp/pspapi/group?section="+section_id+"&semester=2&key=appmob";
 
         // Create a request queue
         RequestQueue queue2 = VolleySingleton.getInstance(this).getRequestQueue();
@@ -69,25 +67,26 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
                         try {
                             Log.d("Response", "Array length: " + response.length()); // Log the length of the response
-                            specialtyArrayList.clear();
+                            groupArrayList.clear();
                             for (int i = 0; i < response.length(); i++) {
 
-                                JSONObject spcObject = response.getJSONObject(i);
-                                Specialty specialty = new Specialty(
-                                        spcObject.getInt("id_specialty"),
-                                        spcObject.getString("Nom_spec"),
-                                        spcObject.getString("name_spec_ar")
+                                JSONObject groupObject = response.getJSONObject(i);
+                                Group group = new Group(
+                                        groupObject.getInt("groupe_id"),
+                                        groupObject.getString("groupe_name")
+
                                 );
-                                specialtyArrayList.add(specialty);
+                                groupArrayList.add(group);
+                                Log.d("Response", "Array length: " + response.length());
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run(){
-                                        Log.d("JsonResponse3","specialty:"+specialty.toString());
+                                        Log.d("JsonResponse6","group:"+group.toString());
                                     }
                                 });
                             }
 
-                            recyclerView.setAdapter(specialtyAdapter);
+                            recyclerView.setAdapter(groupAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -110,7 +109,7 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Faculty faculty) {
-        
+
     }
 
     @Override
@@ -120,10 +119,6 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Specialty specialty) {
-        Intent intent= new Intent(MainActivity3.this,MainActivity4.class);
-        intent.putExtra("id_spc",specialty.getId_specialty());
-
-        startActivity(intent);
 
     }
 

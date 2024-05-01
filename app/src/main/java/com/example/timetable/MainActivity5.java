@@ -1,6 +1,5 @@
 package com.example.timetable;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,39 +24,39 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity3 extends AppCompatActivity implements SelectListener {
+public class MainActivity5 extends AppCompatActivity implements SelectListener {
 
     RecyclerView recyclerView;
-    ArrayList<Specialty> specialtyArrayList;
+    ArrayList<Section> sectionArrayList;
 
-    SpecialtyAdapter specialtyAdapter;
+    SectionAdapter sectionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main3);
+        setContentView(R.layout.activity_main5);
+
         Intent intent = getIntent();
 
-        int id_dep = 0;
-        id_dep = intent.getIntExtra("id",id_dep);
+        int id_niv_spec = 0;
+        id_niv_spec = intent.getIntExtra("id_niv_spec",id_niv_spec);
 
-        recyclerView = findViewById(R.id.recyclerView2);
+        recyclerView = findViewById(R.id.recyclerView4);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
-        specialtyArrayList = new ArrayList<>();
 
-        specialtyAdapter= new SpecialtyAdapter(MainActivity3.this,specialtyArrayList, this);
-        recyclerView.setAdapter(specialtyAdapter);
 
-        getSpecialties(id_dep);
-        
+        sectionArrayList=new ArrayList<>();
+
+        sectionAdapter=new SectionAdapter(MainActivity5.this,sectionArrayList,this);
+        recyclerView.setAdapter(sectionAdapter);
+        getSectin(id_niv_spec);
     }
-    public void getSpecialties(int id_dep)
-    {
+
+    private void getSectin(int id_niv_spec ){
         // Define the API endpoint URL
-        String url = "http://num.univ-biskra.dz/psp/pspapi/specialty?department="+id_dep+"&semester=2&key=appmob";
+        String url = "http://num.univ-biskra.dz/psp/pspapi/section?level_specialty="+id_niv_spec+"&semester=2&key=appmob";
 
         // Create a request queue
         RequestQueue queue2 = VolleySingleton.getInstance(this).getRequestQueue();
@@ -69,25 +68,26 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
                         try {
                             Log.d("Response", "Array length: " + response.length()); // Log the length of the response
-                            specialtyArrayList.clear();
+                            sectionArrayList.clear();
                             for (int i = 0; i < response.length(); i++) {
 
-                                JSONObject spcObject = response.getJSONObject(i);
-                                Specialty specialty = new Specialty(
-                                        spcObject.getInt("id_specialty"),
-                                        spcObject.getString("Nom_spec"),
-                                        spcObject.getString("name_spec_ar")
+                                JSONObject sectionObject = response.getJSONObject(i);
+                                Section section = new Section(
+                                        sectionObject.getInt("section_id"),
+                                        sectionObject.getString("Abrev_fr")
+
                                 );
-                                specialtyArrayList.add(specialty);
+                                sectionArrayList.add(section);
+                                Log.d("Response", "Array length: " + response.length());
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run(){
-                                        Log.d("JsonResponse3","specialty:"+specialty.toString());
+                                        Log.d("JsonResponse5","section:"+section.toString());
                                     }
                                 });
                             }
 
-                            recyclerView.setAdapter(specialtyAdapter);
+                            recyclerView.setAdapter(sectionAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -110,7 +110,7 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Faculty faculty) {
-        
+
     }
 
     @Override
@@ -120,10 +120,6 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Specialty specialty) {
-        Intent intent= new Intent(MainActivity3.this,MainActivity4.class);
-        intent.putExtra("id_spc",specialty.getId_specialty());
-
-        startActivity(intent);
 
     }
 
@@ -134,6 +130,9 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Section section) {
+        Intent intent = new Intent(MainActivity5.this, MainActivity6.class);
+        intent.putExtra("section_id",section.getSectionn_id());
+        startActivity(intent);
 
     }
 

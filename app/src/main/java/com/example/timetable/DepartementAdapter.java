@@ -56,7 +56,6 @@ public class DepartementAdapter extends RecyclerView.Adapter<DepartementAdapter.
 
     public class DepartementHolder extends RecyclerView.ViewHolder {
         TextView textView;
-        Button button;
         CardView cardView;
         public DepartementHolder(@NonNull View itemView) {
             super(itemView);

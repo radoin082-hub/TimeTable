@@ -1,9 +1,9 @@
 package com.example.timetable;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LogPrinter;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,39 +25,40 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity3 extends AppCompatActivity implements SelectListener {
-
+public class MainActivity4 extends AppCompatActivity implements SelectListener {
     RecyclerView recyclerView;
-    ArrayList<Specialty> specialtyArrayList;
+    ArrayList<Levle> levleArrayList;
 
-    SpecialtyAdapter specialtyAdapter;
+    LevelAdapter levelAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main3);
+        setContentView(R.layout.activity_main4);
         Intent intent = getIntent();
 
-        int id_dep = 0;
-        id_dep = intent.getIntExtra("id",id_dep);
+        int id_spc = 0;
+        id_spc = intent.getIntExtra("id_spc",id_spc);
 
-        recyclerView = findViewById(R.id.recyclerView2);
+
+
+        recyclerView = findViewById(R.id.recyclerView3);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        
-        specialtyArrayList = new ArrayList<>();
 
-        specialtyAdapter= new SpecialtyAdapter(MainActivity3.this,specialtyArrayList, this);
-        recyclerView.setAdapter(specialtyAdapter);
+        levleArrayList = new ArrayList<>();
 
-        getSpecialties(id_dep);
-        
+        levelAdapter= new LevelAdapter(MainActivity4.this,levleArrayList, this);
+        recyclerView.setAdapter(levelAdapter);
+
+        getLevles(id_spc);
+
     }
-    public void getSpecialties(int id_dep)
+    public void getLevles(int id_spc)
     {
         // Define the API endpoint URL
-        String url = "http://num.univ-biskra.dz/psp/pspapi/specialty?department="+id_dep+"&semester=2&key=appmob";
+        String url = "http://num.univ-biskra.dz/psp/pspapi/level?specialty="+id_spc+"&semester=2&key=appmob";
 
         // Create a request queue
         RequestQueue queue2 = VolleySingleton.getInstance(this).getRequestQueue();
@@ -69,25 +70,26 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
                         try {
                             Log.d("Response", "Array length: " + response.length()); // Log the length of the response
-                            specialtyArrayList.clear();
+                            levleArrayList.clear();
                             for (int i = 0; i < response.length(); i++) {
 
-                                JSONObject spcObject = response.getJSONObject(i);
-                                Specialty specialty = new Specialty(
-                                        spcObject.getInt("id_specialty"),
-                                        spcObject.getString("Nom_spec"),
-                                        spcObject.getString("name_spec_ar")
+                                JSONObject levelObject = response.getJSONObject(i);
+                                Levle levle = new Levle(
+                                        levelObject.getInt("id_niv_spec"),
+                                        levelObject.getString("id_niveau")
+
                                 );
-                                specialtyArrayList.add(specialty);
+                                levleArrayList.add(levle);
+                                Log.d("Response", "Array length: " + response.length());
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run(){
-                                        Log.d("JsonResponse3","specialty:"+specialty.toString());
+                                        Log.d("JsonResponse4","levle:"+levle.toString());
                                     }
                                 });
                             }
 
-                            recyclerView.setAdapter(specialtyAdapter);
+                            recyclerView.setAdapter(levelAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -110,7 +112,7 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Faculty faculty) {
-        
+
     }
 
     @Override
@@ -120,20 +122,20 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Specialty specialty) {
-        Intent intent= new Intent(MainActivity3.this,MainActivity4.class);
-        intent.putExtra("id_spc",specialty.getId_specialty());
-
-        startActivity(intent);
 
     }
 
     @Override
     public void onItemClicked(Levle levle) {
-
+        Intent intent= new Intent(MainActivity4.this,MainActivity5.class);
+        intent.putExtra("id_niv_spec",levle.getId_niv_spec());
+        startActivity(intent);
     }
 
     @Override
     public void onItemClicked(Section section) {
+
+
 
     }
 

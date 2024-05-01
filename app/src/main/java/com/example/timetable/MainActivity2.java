@@ -51,7 +51,7 @@ public class MainActivity2 extends AppCompatActivity implements SelectListener {
 
         departementArrayList= new ArrayList<>();
 
-        departementAdapter=new DepartementAdapter((Context) MainActivity2.this,departementArrayList, this);
+        departementAdapter=new DepartementAdapter( MainActivity2.this,departementArrayList, this);
         recyclerView.setAdapter(departementAdapter);
 
 
@@ -81,7 +81,9 @@ public class MainActivity2 extends AppCompatActivity implements SelectListener {
 
                                 JSONObject depObject = response.getJSONObject(i);
                                 Departement departement = new Departement(
-                                        depObject.getString("name_fr")
+                                        depObject.getInt("id"),
+                                        depObject.getString("name_fr"),
+                                        depObject.getString("name_ar")
                                 );
                                 departementArrayList.add(departement);
                                 runOnUiThread(new Runnable() {
@@ -116,11 +118,34 @@ public class MainActivity2 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Faculty faculty) {
-
     }
 
     @Override
     public void onItemClicked(Departement departement) {
+        Intent intent= new Intent(MainActivity2.this,MainActivity3.class);
+        intent.putExtra("id",departement.getId());
+
+        startActivity(intent);
+
+    }
+
+    @Override
+    public void onItemClicked(Specialty specialty) {
+
+    }
+
+    @Override
+    public void onItemClicked(Levle levle) {
+
+    }
+
+    @Override
+    public void onItemClicked(Section section) {
+
+    }
+
+    @Override
+    public void onItemClicked(Group group) {
 
     }
 }

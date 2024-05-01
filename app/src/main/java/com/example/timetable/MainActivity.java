@@ -129,4 +129,24 @@ public class MainActivity extends AppCompatActivity implements SelectListener {
     public void onItemClicked(Departement departement) {
 
     }
+
+    @Override
+    public void onItemClicked(Specialty specialty) {
+
+    }
+
+    @Override
+    public void onItemClicked(Levle levle) {
+
+    }
+
+    @Override
+    public void onItemClicked(Section section) {
+
+    }
+
+    @Override
+    public void onItemClicked(Group group) {
+
+    }
 }
