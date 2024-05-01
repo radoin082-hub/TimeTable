@@ -12,6 +12,10 @@ public class Faculty {
         this.name_fac_ar = name_fac_ar;
     }
 
+    public Faculty(String name_fac) {
+        this.name_fac = name_fac;
+    }
+
     public int getId_fac() {
         return id_fac;
     }
@@ -34,5 +38,14 @@ public class Faculty {
 
     public void setName_fac_ar(String name_fac_ar) {
         this.name_fac_ar = name_fac_ar;
+    }
+
+    @Override
+    public String toString() {
+        return "Faculty{" +
+                "id_fac=" + id_fac +
+                ", name_fac='" + name_fac + '\'' +
+                ", name_fac_ar='" + name_fac_ar + '\'' +
+                '}';
     }
 }
