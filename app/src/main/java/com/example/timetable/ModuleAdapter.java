@@ -86,35 +86,45 @@ public class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleHold
 
         holder.Location.setText(schedule.getLocation());
         holder.Location.setOnClickListener(new View.OnClickListener() {
-            @Override
+
             public void onClick(View v) {
-                if (schedule.getOnline()==1) { // open meet
+                if (schedule.getOnline() == 1) {
                     if (!schedule.getOnlineLink().isEmpty()) {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(schedule.getOnlineLink()));
-                        startActivity(intent);
-                    } else Toast.makeText(context, "URL Is Empty", Toast.LENGTH_SHORT).show();
-                } else {   // Open GPS
-                    // Split the string using comma
-                    String[] parts = schedule.getLocationGPS().split(",");
+                        context.startActivity(intent);
+                    } else {
+                        Toast.makeText(context, "URL Is Empty", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Open Google Maps with the location
+                    if (!schedule.getLocationGPS().isEmpty()) {
+                        String[] parts = schedule.getLocationGPS().split(",");
+                        double latitude = Double.parseDouble(parts[0].trim());
+                        double longitude = Double.parseDouble(parts[1].trim());
 
-                    // Extract latitude and longitude values
-                    double latitude = Double.parseDouble(parts[0].trim());
-                    double longitude = Double.parseDouble(parts[1].trim());
+                        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
 
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(Locale.US, "geo:%f,%f?q=%f,%f", latitude, longitude, latitude, longitude)));
-
-                    intent.setPackage("com.google.android.apps.maps");
-                    startActivity(intent);
+                        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+                            context.startActivity(mapIntent);
+                        } else {
+                            Toast.makeText(context, "Google Maps app is not installed", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Location is not available", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+
 
 
         });
     }
 
-    private void startActivity(Intent intent) {
+    /*private void startActivity(Intent intent) {
         startActivity(intent);
-    }
+    }*/
 
 
     @Override

@@ -122,7 +122,6 @@ public class MainActivity3 extends AppCompatActivity implements SelectListener {
     public void onItemClicked(Specialty specialty) {
         Intent intent= new Intent(MainActivity3.this,MainActivity4.class);
         intent.putExtra("id_spc",specialty.getId_specialty());
-
         startActivity(intent);
 
     }

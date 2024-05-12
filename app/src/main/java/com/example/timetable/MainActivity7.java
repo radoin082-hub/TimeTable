@@ -35,6 +35,8 @@ public class MainActivity7 extends AppCompatActivity {
     ArrayList<Schedule> tuesdayArrayList;
     ArrayList<Schedule> thursdayArrayList;
     ArrayList<Schedule> wednesdayArrayList;
+    ArrayList<Schedule> saturdayArrayList;
+    ArrayList<Schedule> allSessionArrayList;
 
     Button sunday;
     Button monday;
@@ -47,7 +49,9 @@ public class MainActivity7 extends AppCompatActivity {
     RecyclerView recyclerView;
 
     ModuleAdapter moduleAdapter;
-
+    String id_niveau;
+    int id_spc=0;
+    int section_id = 0;
 
 
     @Override
@@ -68,6 +72,14 @@ public class MainActivity7 extends AppCompatActivity {
         int groupe_id = 0;
         groupe_id = intent.getIntExtra("groupe_id",groupe_id);
 
+        section_id = 0;
+        section_id = intent.getIntExtra("section_id",section_id);
+
+        id_niveau = intent.getStringExtra("id_niveau");
+
+        id_spc=0;
+        id_spc = intent.getIntExtra("id_spc",id_spc);
+
         recyclerView = findViewById(R.id.recyclerView7);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -78,13 +90,14 @@ public class MainActivity7 extends AppCompatActivity {
         tuesdayArrayList = new ArrayList<>();
         wednesdayArrayList = new ArrayList<>();
         thursdayArrayList = new ArrayList<>();
+        saturdayArrayList = new ArrayList<>();
+        allSessionArrayList = new ArrayList<>();
 
         moduleAdapter = new ModuleAdapter(MainActivity7.this,scheduleArrayList);
-        recyclerView.setAdapter(moduleAdapter);
 
 
 
-        getSchedule(groupe_id);
+        getSchedule(groupe_id,section_id,id_niveau,id_spc);
 
 
         sunday.setOnClickListener(new View.OnClickListener() {
@@ -137,11 +150,30 @@ public class MainActivity7 extends AppCompatActivity {
             }
         });
 
+        saturday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!sundayArrayList.isEmpty()) {
+                    moduleAdapter = new ModuleAdapter(MainActivity7.this,saturdayArrayList);
+                    recyclerView.setAdapter(moduleAdapter);
+                }
+            }
+        });
+
+        allSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!sundayArrayList.isEmpty()) {
+                    moduleAdapter = new ModuleAdapter(MainActivity7.this,scheduleArrayList);
+                    recyclerView.setAdapter(moduleAdapter);
+                }
+            }
+        });
 
     }
 
-    private void getSchedule(int groupe_id) {
-        String url = "https://num.univ-biskra.dz/psp/emploi/section2_public?select_spec=109&niveau=3&section=521&groupe=" + groupe_id + "&sg=0&langu=fr&sem=2&id_year=2";
+    private void getSchedule(int groupe_id, int section_id, String id_niveau, int id_spc) {
+        String url = "https://num.univ-biskra.dz/psp/emploi/section2_public?select_spec="+id_spc+"&niveau="+id_niveau+"&section="+section_id+"&groupe=" + groupe_id + "&sg=0&langu=fr&sem=2&id_year=2";
         RequestQueue queue = VolleySingleton.getInstance(this).getRequestQueue();
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
@@ -168,11 +200,22 @@ public class MainActivity7 extends AppCompatActivity {
                                         jsonArray.optString(8),
                                         jsonArray.optInt(12),
                                         jsonArray.optInt(13),
-                                        jsonArray.optInt(21),
-                                        jsonArray.optString(23),
-                                        jsonArray.optString(24)
+                                        jsonArray.optInt(19),
+                                        jsonArray.optString(21),
+                                        jsonArray.optString(22)
                                 );
                                 scheduleArrayList.add(schedule);
+                                Log.d("Response", "Array length: " + response.length());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run(){
+                                        Log.d("JsonResponse7","group:"+schedule.toString());
+                                    }
+                                });
+                                if (schedule.getTypeOfCourse().equals("Cours")) { // Add schedules for Sunday to the sundayArrayList
+                                    allSessionArrayList.add(schedule);
+                                }
+
                                 if (schedule.getDayOfWeek() == 1) { // Add schedules for Sunday to the sundayArrayList
                                     sundayArrayList.add(schedule);
                                 }else if (schedule.getDayOfWeek()==2) {
@@ -183,8 +226,11 @@ public class MainActivity7 extends AppCompatActivity {
                                     wednesdayArrayList.add(schedule);
                                 } else if (schedule.getDayOfWeek()==5) {
                                     thursdayArrayList.add(schedule);
+                                }else if (schedule.getDayOfWeek()==7) {
+                                    saturdayArrayList.add(schedule);
                                 }
                             }
+
                             moduleAdapter.notifyDataSetChanged(); // Notify adapter of data change
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -30,6 +30,7 @@ public class MainActivity4 extends AppCompatActivity implements SelectListener {
     ArrayList<Levle> levleArrayList;
 
     LevelAdapter levelAdapter;
+    int id_spc = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class MainActivity4 extends AppCompatActivity implements SelectListener {
         setContentView(R.layout.activity_main4);
         Intent intent = getIntent();
 
-        int id_spc = 0;
+        id_spc = 0;
         id_spc = intent.getIntExtra("id_spc",id_spc);
 
 
@@ -129,6 +130,8 @@ public class MainActivity4 extends AppCompatActivity implements SelectListener {
     public void onItemClicked(Levle levle) {
         Intent intent= new Intent(MainActivity4.this,MainActivity5.class);
         intent.putExtra("id_niv_spec",levle.getId_niv_spec());
+        intent.putExtra("id_spc",id_spc);
+        intent.putExtra("id_niveau",levle.getId_niveau());
         startActivity(intent);
     }
 

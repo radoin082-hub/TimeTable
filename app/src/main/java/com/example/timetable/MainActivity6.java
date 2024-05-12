@@ -29,7 +29,9 @@ public class MainActivity6 extends AppCompatActivity implements SelectListener {
     RecyclerView recyclerView;
     ArrayList<Group> groupArrayList;
     GroupAdapter groupAdapter;
-
+    String id_niveau;
+    int id_spc=0;
+    int section_id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +41,13 @@ public class MainActivity6 extends AppCompatActivity implements SelectListener {
 
         Intent intent = getIntent();
 
-        int section_id = 0;
+        section_id = 0;
         section_id = intent.getIntExtra("section_id",section_id);
+
+        id_niveau = intent.getStringExtra("id_niveau");
+
+        id_spc=0;
+        id_spc = intent.getIntExtra("id_spc",id_spc);
 
         recyclerView = findViewById(R.id.recyclerView5);
         recyclerView.setHasFixedSize(true);
@@ -136,6 +143,9 @@ public class MainActivity6 extends AppCompatActivity implements SelectListener {
     public void onItemClicked(Group group) {
         Intent intent = new Intent(MainActivity6.this, MainActivity7.class);
         intent.putExtra("groupe_id",group.getGroupe_id());
+        intent.putExtra("id_spc",id_spc);
+        intent.putExtra("id_niveau",id_niveau);
+        intent.putExtra("section_id",section_id);
         startActivity(intent);
 
     }

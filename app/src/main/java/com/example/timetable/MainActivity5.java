@@ -30,7 +30,8 @@ public class MainActivity5 extends AppCompatActivity implements SelectListener {
     ArrayList<Section> sectionArrayList;
 
     SectionAdapter sectionAdapter;
-
+    String id_niveau;
+    int id_spc=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,12 @@ public class MainActivity5 extends AppCompatActivity implements SelectListener {
 
         int id_niv_spec = 0;
         id_niv_spec = intent.getIntExtra("id_niv_spec",id_niv_spec);
+
+
+        id_niveau = intent.getStringExtra("id_niveau");
+
+        id_spc=0;
+        id_spc = intent.getIntExtra("id_spc",id_spc);
 
         recyclerView = findViewById(R.id.recyclerView4);
         recyclerView.setHasFixedSize(true);
@@ -118,6 +125,8 @@ public class MainActivity5 extends AppCompatActivity implements SelectListener {
     public void onItemClicked(Section section) {
         Intent intent = new Intent(MainActivity5.this, MainActivity6.class);
         intent.putExtra("section_id",section.getSectionn_id());
+        intent.putExtra("id_spc",id_spc);
+        intent.putExtra("id_niveau",id_niveau);
         startActivity(intent);
 
     }
