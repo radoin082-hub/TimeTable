@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SelectListener {
         facultyAdapter = new FacultyAdapter(MainActivity.this, facultyArrayList,this);
         recyclerView.setAdapter(facultyAdapter);
         getFaculties();
+
     }
 
     public void getFaculties()

@@ -55,56 +55,43 @@ public class MainActivity5 extends AppCompatActivity implements SelectListener {
     }
 
     private void getSectin(int id_niv_spec ){
-        // Define the API endpoint URL
         String url = "http://num.univ-biskra.dz/psp/pspapi/section?level_specialty="+id_niv_spec+"&semester=2&key=appmob";
 
-        // Create a request queue
         RequestQueue queue2 = VolleySingleton.getInstance(this).getRequestQueue();
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-
-                        try {
-                            Log.d("Response", "Array length: " + response.length()); // Log the length of the response
-                            sectionArrayList.clear();
-                            for (int i = 0; i < response.length(); i++) {
-
-                                JSONObject sectionObject = response.getJSONObject(i);
-                                Section section = new Section(
-                                        sectionObject.getInt("section_id"),
-                                        sectionObject.getString("Abrev_fr")
-
-                                );
-                                sectionArrayList.add(section);
-                                Log.d("Response", "Array length: " + response.length());
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run(){
-                                        Log.d("JsonResponse5","section:"+section.toString());
-                                    }
-                                });
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                try {
+                    Log.d("Response", "Array length: " + jsonArray.length());
+                    sectionArrayList.clear();
+                    for(int i=0;i<jsonArray.length();i++){
+                        JSONObject sectioObject = jsonArray.getJSONObject(i);
+                        Section section = new Section(
+                                sectioObject.getInt("sectionn_id"),
+                                sectioObject.getString("Abrev_fr")
+                        );
+                        sectionArrayList.add(section);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run(){
+                                Log.d("JsonResponse4","section:"+section.toString());
                             }
-
-                            recyclerView.setAdapter(sectionAdapter);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-
-                        }
+                        });
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle errors
-                        Log.e("Error", "Volley error: " + error.getMessage());
+                    recyclerView.setAdapter(sectionAdapter);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
 
-
-
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.e("Error", "Volley error: " + volleyError.getMessage());
+            }
+        });
         queue2.add(jsonArrayRequest);
     }
 
@@ -125,7 +112,6 @@ public class MainActivity5 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Levle levle) {
-
     }
 
     @Override

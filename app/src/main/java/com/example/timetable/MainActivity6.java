@@ -51,6 +51,7 @@ public class MainActivity6 extends AppCompatActivity implements SelectListener {
         groupAdapter= new GroupAdapter(MainActivity6.this,groupArrayList,this);
         recyclerView.setAdapter(groupAdapter);
         getGroup(section_id);
+        recyclerView.setAdapter(groupAdapter);
 
     }
     private void getGroup(int section_id){
@@ -85,8 +86,7 @@ public class MainActivity6 extends AppCompatActivity implements SelectListener {
                                     }
                                 });
                             }
-
-                            recyclerView.setAdapter(groupAdapter);
+                            groupAdapter.notifyDataSetChanged();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -134,6 +134,9 @@ public class MainActivity6 extends AppCompatActivity implements SelectListener {
 
     @Override
     public void onItemClicked(Group group) {
+        Intent intent = new Intent(MainActivity6.this, MainActivity7.class);
+        intent.putExtra("groupe_id",group.getGroupe_id());
+        startActivity(intent);
 
     }
 }

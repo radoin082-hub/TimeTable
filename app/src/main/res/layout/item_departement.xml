@@ -24,7 +24,7 @@
             android:layout_height="match_parent">
 
 
-            <Button
+            <TextView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/baseline_apartment_24"

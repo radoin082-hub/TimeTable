@@ -1,5 +1,7 @@
 package com.example.timetable;
 
+import static com.example.timetable.R.*;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
